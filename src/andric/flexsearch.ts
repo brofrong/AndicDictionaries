@@ -4,6 +4,7 @@ import { AndicData } from "./andric";
 const index: Index<number> = new FlexSearch({
   profile: "match",
   charset: "latin:extra",
+  resolution: 5,
 }) as any;
 
 export function initData(data: AndicData[]) {
