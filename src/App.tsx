@@ -1,23 +1,24 @@
 import styles from './App.module.css';
 import { andric } from './andric/andric';
-import { initData, search } from './andric/flexsearch';
+import { initData, search } from './andric/andricSearch';
 import { JSX, createSignal } from 'solid-js';
 
 function App() {
   initData(andric);
-  const [dataSet, setDataSet] = createSignal(andric.splice(0, 100));
+  const [dataSet, setDataSet] = createSignal(andric.slice(0, 100));
 
   async function searchWords(event: { target: { value: string; }; }) {
     const value: string = event.target.value;
 
-    if (value === "") {
-      setDataSet(andric.splice(0, 100));
+    if (value == "") {
+      setDataSet(andric.slice(0, 100));
       return;
     }
 
-    const searchIds = await search(value);
-
-    const searchedData = andric.filter((it) => searchIds.includes(it.id));
+    const searchResult = await search(value);
+    console.log(searchResult);
+    const searchedData = searchResult.map((search) => andric.find((it) => it.uniqId == search.id)).slice(0, 100);
+    console.log(searchedData);
     setDataSet(searchedData);
   }
 

@@ -16,6 +16,7 @@
   "dependencies": {
     "class-transformer": "^0.5.1",
     "flexsearch": "^0.7.31",
+    "minisearch": "^6.0.1",
     "solid-js": "^1.6.10"
   }
 }
