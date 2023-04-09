@@ -9,12 +9,20 @@
   pointer-events: none;
 }
 
+.search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
 table {
   font-size: 12px;
 }
 
 .input {
-  margin-bottom: 16px;
+
 }
 
 

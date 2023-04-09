@@ -1,31 +1,48 @@
 import styles from './App.module.css';
 import { andric } from './andric/andric';
-import { initData, search } from './andric/andricSearch';
-import { JSX, createSignal } from 'solid-js';
+import { search } from './andric/andricSearchWorker';
+import { JSX, createEffect, createSignal, useContext } from 'solid-js';
 
 function App() {
-  initData(andric);
-  const [dataSet, setDataSet] = createSignal(andric.slice(0, 100));
+  const [dataSet, setDataSet] = createSignal([]);
+  const [isLoading, setIsLoading] = createSignal(true);
+  const [searchString, setSearchString] = createSignal("");
+  const [fuzzy, setFuzzy] = createSignal(20);
+
+
+  createEffect(async () => {
+    setIsLoading(true);
+    const searchValue = searchString();
+
+    if (searchValue == "") {
+      setDataSet(andric.slice(0, 100));
+      setIsLoading(false);
+      return;
+    }
+    setDataSet([]);
+    const searchResult = await search(searchValue, fuzzy() / 100);
+    const fullSearchData = searchResult.map((search) => andric.find((it) => it.uniqId == search.id));
+    const searchedData = fullSearchData.slice(0, 100);
+    setIsLoading(false);
+    setDataSet(searchedData);
+  })
 
   async function searchWords(event: { target: { value: string; }; }) {
     const value: string = event.target.value;
-
-    if (value == "") {
-      setDataSet(andric.slice(0, 100));
-      return;
-    }
-
-    const searchResult = await search(value);
-    console.log(searchResult);
-    const searchedData = searchResult.map((search) => andric.find((it) => it.uniqId == search.id)).slice(0, 100);
-    console.log(searchedData);
-    setDataSet(searchedData);
   }
 
   return (
     <div class={styles.App}>
       <header class={styles.header}>
-        <input class={styles.input} onchange={searchWords}></input>
+        <div class={styles.search}>
+          <input class={styles.input} onInput={(event) => { setSearchString(event.target.value) }} />
+          <div>
+            строгость поиска:
+            <input type="range" onInput={(event) => setFuzzy(+event.target.value)} min="0" step='10' max="100" value="20" id="myRange" />
+            {fuzzy()}
+          </div>
+        </div>
+        {isLoading() ? <div>Поиск...</div> : <></>}
         <table>
           <thead>
             <tr>

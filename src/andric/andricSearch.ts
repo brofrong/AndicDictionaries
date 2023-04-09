@@ -1,5 +1,5 @@
 import MiniSearch from "minisearch";
-import { AndicData } from "./andric";
+import { AndicData, andric } from "./andric";
 
 let miniSearch = new MiniSearch<AndicData>({
   idField: "uniqId",
@@ -7,12 +7,14 @@ let miniSearch = new MiniSearch<AndicData>({
   storeFields: ["obfuscated"], // fields to return with search results
 });
 
-export function initData(data: AndicData[]) {
+function initData(data: AndicData[]) {
   miniSearch.addAll(data);
 }
 
-export async function search(wordToSearch: string) {
+export async function search(wordToSearch: string, fuzzy: number) {
   return miniSearch.search(wordToSearch.replace(/[^а-яА-Я]/g, ""), {
-    fuzzy: 0.2,
+    fuzzy: fuzzy,
   });
 }
+
+initData(andric);
