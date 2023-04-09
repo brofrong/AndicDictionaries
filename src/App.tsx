@@ -12,6 +12,7 @@ function App() {
 
     if (value === "") {
       setDataSet(andric.splice(0, 100));
+      return;
     }
 
     const searchIds = await search(value);
