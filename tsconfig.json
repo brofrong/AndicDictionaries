@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "ESNext"],
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  }
+}

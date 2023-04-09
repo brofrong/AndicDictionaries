@@ -1,0 +1,40 @@
+.App {
+  text-align: center;
+}
+
+
+.logo {
+  animation: logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+table {
+  font-size: 12px;
+}
+
+.input {
+  margin-bottom: 16px;
+}
+
+
+.header {
+  background-color: #282c34;
+  min-height: 100vh;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 24px 16px;
+}
+
+.link {
+  color: #b318f0;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
