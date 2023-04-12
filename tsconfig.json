@@ -5,6 +5,7 @@
     "jsxImportSource": "solid-js",
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["vite/client"],
   }
 }
