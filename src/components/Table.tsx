@@ -1,44 +1,54 @@
-import { Component, For, createEffect, createSignal, onMount } from "solid-js";
+import { Component, For, Show, createEffect, createSignal, onMount } from "solid-js";
 import { TableInfo } from "../search/table";
 import { ScrolledToEnd } from "./ScrolledToEnd";
 import { TableStore } from "../search/tableStore";
 
-type param = { table: TableStore, onSelectSearch: (index: string[]) => void }
+type param = { table: TableStore }
 
-export const Table: Component<param> = ({ table, onSelectSearch }) => {
-    let tableHead: HTMLTableRowElement;
-
-    function updateSelected() {
-        const ret = [];
-        const inputs = tableHead.querySelectorAll("input");
-
-        inputs.forEach(it => it.checked ? ret.push(it.value) : null);
-        onSelectSearch(ret)
-    }
-
+export const Table: Component<param> = ({ table }) => {
     return (
         <ScrolledToEnd onScrolledToEnd={() => table.showMore()}>
-            <table>
-                <thead>
-                    <tr ref={tableHead}>
-                        <For each={table.tableFullData.header} >
-                            {(title, index) => <th><input type="checkbox" name="search-title-select" value={title} checked={true} onChange={() => updateSelected()} />{title}</th>}
-                        </For>
-                    </tr>
-                </thead>
-                <tbody>
-                    <For each={table.rowsToDisplay()} fallback={<div>Ничего не найдено...</div>}>
-                        {(rows) =>
-                            <tr>
-                                <For each={rows}>
-                                    {(row) => <td>{row}</td>}
+            <div class="overflow-x-auto">
+                <div class="w-full">
+                    <div class="bg-white shadow-md rounded my-6">
+                        <table class="min-w-max w-full table-auto">
+                            <thead>
+                                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <For each={table.tableFullData.header} >
+                                        {(title) =>
+                                            <th class="py-3 px-6 text-left">
+                                                {title}
+                                            </th>}
+                                    </For>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600 text-sm font-light">
+                                <For each={table.rowsToDisplay()} >
+                                    {(rows, index) =>
+                                        <tr class={`border-b border-gray-200 ${index() % 2 ? "bg-gray-50" : "bg-white"} hover:bg-gray-100`}>
+                                            <For each={rows}>
+                                                {(row) => <td class="py-3 px-6 text-left whitespace-nowrap">{row}</td>}
+                                            </For>
+                                        </tr>
+                                    }
                                 </For>
-                            </tr>
-                        }
-                    </For>
-                    <tr></tr>
-                </tbody>
-            </table>
+                            </tbody>
+                        </table>
+                        <Show when={!table.rowsToDisplay()?.length}>
+                            <NoTableData />
+                        </Show>
+                    </div>
+                </div>
+            </div>
         </ScrolledToEnd>
     )
-} 
+}
+
+
+const NoTableData: Component = () => {
+    return (
+        <div class="w-full text-center p-4 text-gray-600">
+            Ничего не найдено
+        </div>
+    )
+}

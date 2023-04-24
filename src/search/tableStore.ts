@@ -13,6 +13,12 @@ export class TableStore {
   private numberRowsToDisplay: Accessor<number>;
   private setNumberRowsToDisplay: Setter<number>;
 
+  public searchValue: Accessor<string>;
+  public setSearchValue: Setter<string>;
+
+  public searchColumns: Accessor<string[]>;
+  public setSearchColumns: Setter<string[]>;
+
   constructor(initData: string) {
     console.time("createTable");
     this.tableFullData = new TableInfo(initData);
@@ -40,9 +46,26 @@ export class TableStore {
     this.numberRowsToDisplay = numberRowsToDisplay;
     this.setNumberRowsToDisplay = setNumberRowsToDisplay;
 
+    const [searchValue, setSearchValue] = createSignal("");
+    this.searchValue = searchValue;
+    this.setSearchValue = setSearchValue;
+
+    const [searchColumns, setSearchColumns] = createSignal(
+      this.tableFullData.header
+    );
+    this.searchColumns = searchColumns;
+    this.setSearchColumns = setSearchColumns;
+
     createEffect(() => {
       const toShow = this.filteredRows().slice(0, numberRowsToDisplay());
       this.setRowsToDisplay(toShow);
+    });
+
+    createEffect(() => {
+      this.search(this.searchValue(), {
+        fields: this.searchColumns(),
+        fuzzy: 0.4,
+      });
     });
   }
 
