@@ -19,6 +19,12 @@ export class TableStore {
   public searchColumns: Accessor<string[]>;
   public setSearchColumns: Setter<string[]>;
 
+  public columnsToHide: Accessor<number[]>;
+  public setColumnsToHide: Setter<number[]>;
+
+  public fuzzyAccuracy: Accessor<number>;
+  public setFuzzyAccuracy: Setter<number>;
+
   constructor(initData: string) {
     console.time("createTable");
     this.tableFullData = new TableInfo(initData);
@@ -56,6 +62,14 @@ export class TableStore {
     this.searchColumns = searchColumns;
     this.setSearchColumns = setSearchColumns;
 
+    const [columnsToHide, setColumnsToHide] = createSignal([]);
+    this.columnsToHide = columnsToHide;
+    this.setColumnsToHide = setColumnsToHide;
+
+    const [fuzzyAccuracy, setFuzzyAccuracy] = createSignal(75);
+    this.fuzzyAccuracy = fuzzyAccuracy;
+    this.setFuzzyAccuracy = setFuzzyAccuracy;
+
     createEffect(() => {
       const toShow = this.filteredRows().slice(0, numberRowsToDisplay());
       this.setRowsToDisplay(toShow);
@@ -64,7 +78,7 @@ export class TableStore {
     createEffect(() => {
       this.search(this.searchValue(), {
         fields: this.searchColumns(),
-        fuzzy: 0.4,
+        fuzzy: this.fuzzyAccuracy(),
       });
     });
   }
@@ -78,7 +92,7 @@ export class TableStore {
       return;
     }
 
-    const ret = await search(query, 40 / 100, options.fields);
+    const ret = await search(query, 1 - options.fuzzy / 100, options.fields);
     const fullSearchData = ret.map((it) => this.tableFullData.body[it.id]);
     this.applyFiltered(fullSearchData);
   }

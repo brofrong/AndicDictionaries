@@ -15,10 +15,13 @@ export const Table: Component<param> = ({ table }) => {
                             <thead>
                                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                     <For each={table.tableFullData.header} >
-                                        {(title) =>
-                                            <th class="py-3 px-6 text-left">
-                                                {title}
-                                            </th>}
+                                        {(title, index) =>
+                                            <Show when={!table.columnsToHide().includes(index())}>
+                                                <th class="py-3 px-6 text-left">
+                                                    {title}
+                                                </th>
+                                            </Show>
+                                        }
                                     </For>
                                 </tr>
                             </thead>
@@ -27,7 +30,12 @@ export const Table: Component<param> = ({ table }) => {
                                     {(rows, index) =>
                                         <tr class={`border-b border-gray-200 ${index() % 2 ? "bg-gray-50" : "bg-white"} hover:bg-gray-100`}>
                                             <For each={rows}>
-                                                {(row) => <td class="py-3 px-6 text-left whitespace-nowrap">{row}</td>}
+                                                {
+                                                    (row, indexRow) =>
+                                                        <Show when={!table.columnsToHide().includes(indexRow())}>
+                                                            <td class="py-3 px-6 text-left max-w-md">{row}</td>
+                                                        </Show>
+                                                }
                                             </For>
                                         </tr>
                                     }
