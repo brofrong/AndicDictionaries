@@ -14,9 +14,13 @@ export class TableStore {
   private setNumberRowsToDisplay: Setter<number>;
 
   constructor(initData: string) {
+    console.time("createTable");
     this.tableFullData = new TableInfo(initData);
+    console.timeEnd("createTable");
     this.setSignals();
+    console.time("createSearchIndex");
     initSearch(this.tableFullData);
+    console.timeEnd("createSearchIndex");
   }
 
   private setSignals() {
