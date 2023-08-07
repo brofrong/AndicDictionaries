@@ -2,7 +2,7 @@
 
 Маленьй проект для не точного поиска в строчках. хотел поизучать работу с WebWorkers и fuzzySearch 
 
-Проект мможно потыкать [https://brofrong.github.io/AndicDictionaries/](тут)
+Проект мможно потыкать [тут](https://brofrong.github.io/AndicDictionaries/)
 
 ## Usage
 
